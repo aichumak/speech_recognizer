@@ -6,7 +6,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.lifecycle.LifecycleOwner
 
-class CustomSpeechRecognizer(
+class SpeechRecognizer(
     activityResultRegistry: ActivityResultRegistry,
     lifecycleOwner: LifecycleOwner,
     callBack: (text: String?) -> Unit

@@ -9,24 +9,29 @@ class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = checkNotNull(_binding)
-    private val speechRecognizer = CustomSpeechRecognizer(
+    private val speechRecognizer = SpeechRecognizer(
         activityResultRegistry,
         this
     ) {
         binding.textView.text = it
     }
+    private lateinit var textSpeaker: TextSpeaker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        textSpeaker = TextSpeaker(applicationContext)
         initClickListeners()
     }
 
     private fun initClickListeners() {
-        binding.button.setOnClickListener {
+        binding.recognizeButton.setOnClickListener {
             speechRecognizer.recognizeSpeech()
+        }
+        binding.textToSpeechButton.setOnClickListener {
+            textSpeaker.speakText(binding.textView.text.toString())
         }
     }
 
