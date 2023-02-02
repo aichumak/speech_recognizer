@@ -1,0 +1,57 @@
+package com.example.textrecognizingfrommic
+
+import android.content.Context
+import android.media.AudioAttributes
+import android.media.SoundPool
+import android.speech.tts.TextToSpeech
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.ActivityResultRegistry
+import androidx.lifecycle.LifecycleOwner
+import java.util.*
+
+class CustomSpeechRecognizer(
+    context: Context,
+    activityResultRegistry: ActivityResultRegistry,
+    lifecycleOwner: LifecycleOwner,
+    callBack: (text: String?) -> Unit
+) {
+
+    companion object {
+
+        const val SPEECH_RECOGNIZING_REGISTRY_KEY = "SPEECH_RECOGNIZING_REGISTRY_KEY"
+    }
+
+    private var sounds: SoundPool? = null
+    private var textToSpeech: TextToSpeech? = null
+    private val getRecognizedText: ActivityResultLauncher<Unit> = activityResultRegistry.register(
+        SPEECH_RECOGNIZING_REGISTRY_KEY,
+        lifecycleOwner,
+        RecognizeSpeechContract(),
+        callBack
+    )
+
+    init {
+        initSoundPool()
+        textToSpeech = TextToSpeech(
+            context
+        ) { status ->
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech?.language = Locale.getDefault()
+            }
+        }
+    }
+
+    private fun initSoundPool() {
+        val attributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_GAME)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+        sounds = SoundPool.Builder()
+            .setAudioAttributes(attributes)
+            .build()
+    }
+
+    fun recognizeSpeech() {
+        getRecognizedText.launch(Unit)
+    }
+}
