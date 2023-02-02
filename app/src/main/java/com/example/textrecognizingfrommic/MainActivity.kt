@@ -10,7 +10,6 @@ class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
     private val binding get() = checkNotNull(_binding)
     private val speechRecognizer = CustomSpeechRecognizer(
-        this,
         activityResultRegistry,
         this
     ) {

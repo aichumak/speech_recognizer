@@ -1,16 +1,12 @@
 package com.example.textrecognizingfrommic
 
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
-import android.speech.tts.TextToSpeech
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
 import androidx.lifecycle.LifecycleOwner
-import java.util.*
 
 class CustomSpeechRecognizer(
-    context: Context,
     activityResultRegistry: ActivityResultRegistry,
     lifecycleOwner: LifecycleOwner,
     callBack: (text: String?) -> Unit
@@ -22,7 +18,6 @@ class CustomSpeechRecognizer(
     }
 
     private var sounds: SoundPool? = null
-    private var textToSpeech: TextToSpeech? = null
     private val getRecognizedText: ActivityResultLauncher<Unit> = activityResultRegistry.register(
         SPEECH_RECOGNIZING_REGISTRY_KEY,
         lifecycleOwner,
@@ -32,13 +27,6 @@ class CustomSpeechRecognizer(
 
     init {
         initSoundPool()
-        textToSpeech = TextToSpeech(
-            context
-        ) { status ->
-            if (status != TextToSpeech.ERROR) {
-                textToSpeech?.language = Locale.getDefault()
-            }
-        }
     }
 
     private fun initSoundPool() {
